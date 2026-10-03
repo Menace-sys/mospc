@@ -1,7 +1,6 @@
 (()=>{
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-CATALOG.forEach(p=>{p.shop="Age Computers";p.url="https://t.me/agecomputer"});
 const ICON={
  cpu:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/>',
  mb:'<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="8" y="8" width="5" height="5"/><path d="M16 8v8M8 17h5"/>',
@@ -139,10 +138,8 @@ function partsHTML(){
     return `<div class="part"><div class="ico">${icon(c)}</div>
       <div><div class="cat">${esc(CATS[c].n)}</div><div class="nm">${esc(p.name)}</div><div class="sp">${esc(SPEC[c](p))}</div></div>
       <div class="pr"><div class="price num">${esc(m1(p.price))}</div><div class="price-sub num">${esc(m2(p.price))}</div></div>
-      <div class="acts"><a class="btn pri sm" href="${esc(p.url)}" target="_blank" rel="noopener">Sotib olish</a>
-        <button class="btn sec sm" data-add="${c}" type="button">O'zgartirish</button>
-        <span class="shop grow" style="align-self:center">${esc(p.shop)}</span>
-        <button class="btn quiet sm" data-rm="${c}" type="button">Olib tashlash</button></div></div>`;
+      <div class="acts"><button class="btn sec sm" data-add="${c}" type="button">O'zgartirish</button>
+        <button class="btn quiet sm grow" data-rm="${c}" type="button">Olib tashlash</button></div></div>`;
   }).join("");
 }
 let lastR=null;
@@ -197,7 +194,7 @@ function fillPicker(){
   items.sort((a,b)=>pk.sort==="priceDesc"?b.p.price-a.p.price:pk.sort==="name"?a.p.name.localeCompare(b.p.name):a.p.price-b.p.price);
   const cur=S.pick[c]?S.pick[c].id:null;
   $("#pk-l").innerHTML=items.length?items.map(({p,bad})=>`<button class="opt ${p.id===cur?"cur":""}" type="button" data-id="${esc(p.id)}">
-    <span><span class="nm">${esc(p.name)}</span><br><span class="sp">${esc(SPEC[c](p))}, ${esc(p.shop)}</span>${bad?`<br><span class="bad">${esc(bad)}</span>`:""}</span>
+    <span><span class="nm">${esc(p.name)}</span><br><span class="sp">${esc(SPEC[c](p))}</span>${bad?`<br><span class="bad">${esc(bad)}</span>`:""}</span>
     <span style="text-align:right"><span class="price num">${esc(m1(p.price))}</span><br><span class="price-sub num">${esc(m2(p.price))}</span></span></button>`).join("")
     :`<div class="none">Mos qism topilmadi.${pk.all?"":" \"Mos kelmaydiganlarni ham ko'rsat\"ni yoqib ko'ring."}</div>`;
 }
@@ -207,7 +204,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#p
 /* ---------- actions ---------- */
 function listText(r){
   const L=["MosPC yig'mam:",""];
-  ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)}), ${p.shop}`)});
+  ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)})`)});
   if(!S.pick.gpu&&S.pick.cpu&&S.pick.cpu.igpu)L.push("Videokarta: yo'q, protsessordagi grafika ishlatiladi");
   L.push("","Jami: "+usdf(r.total)+" ("+uzs(r.total)+")",r.ok?"Moslik: hammasi mos":"Moslik: muammolar bor");
   r.issues.filter(i=>i.l==="error").forEach(i=>L.push("! "+i.t));
