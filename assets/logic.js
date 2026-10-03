@@ -11,20 +11,20 @@ const partsOf = c => CATALOG.filter(p=>p.cat===c);
 
 /* sel: {cat: part|null} (part may carry .price override) */
 function evaluate(sel){
-  const iss=[]; const e=t=>iss.push({l:"error",t}), w=t=>iss.push({l:"warn",t});
+  const iss=[]; const e=(t,g)=>iss.push({l:"error",t,g}), w=(t,g)=>iss.push({l:"warn",t,g});
   const {cpu,mb,ram,gpu,psu,case:cs,cooler,ssd}=sel;
-  if(cpu&&mb&&cpu.socket!==mb.socket) e(`Protsessor soketi ${cpu.socket}, plata soketi ${mb.socket}: mos emas.`);
-  if(mb&&ram&&mb.ram!==ram.type) e(`Plata ${mb.ram} xotira qabul qiladi, siz ${ram.type} tanladingiz.`);
-  if(mb&&cs&&!cs.forms.includes(mb.form)) e(`${mb.form} plata bu korpusga sig'maydi.`);
-  if(gpu&&cs&&gpu.len>cs.maxGpu) e(`Videokarta ${gpu.len} mm, korpusga eng ko'pi ${cs.maxGpu} mm sig'adi.`);
-  if(cpu&&cooler&&cooler.maxTdp<cpu.tdp) e(`Bu kuler ${cpu.tdp}W protsessorni sovita olmaydi.`);
-  if(cpu&&!gpu&&!cpu.igpu) e("Bu protsessorda o'rnatilgan grafika yo'q: videokarta kerak.");
+  if(cpu&&mb&&cpu.socket!==mb.socket) e(`Protsessor soketi ${cpu.socket}, plata soketi ${mb.socket}: mos emas.`,'cpu-mb');
+  if(mb&&ram&&mb.ram!==ram.type) e(`Plata ${mb.ram} xotira qabul qiladi, siz ${ram.type} tanladingiz.`,'ram-mb');
+  if(mb&&cs&&!cs.forms.includes(mb.form)) e(`${mb.form} plata bu korpusga sig'maydi.`,'mb-case');
+  if(gpu&&cs&&gpu.len>cs.maxGpu) e(`Videokarta ${gpu.len} mm, korpusga eng ko'pi ${cs.maxGpu} mm sig'adi.`,'gpu-case');
+  if(cpu&&cooler&&cooler.maxTdp<cpu.tdp) e(`Bu kuler ${cpu.tdp}W protsessorni sovita olmaydi.`,'cooler-cpu');
+  if(cpu&&!gpu&&!cpu.igpu) e("Bu protsessorda o'rnatilgan grafika yo'q: videokarta kerak.","gpu-mb");
   const need=(cpu?cpu.tdp:0)+(gpu?gpu.tdp:0)+100;
   if(psu&&(cpu||gpu)){
-    if(psu.watts<need) e(`Quvvat bloki yetmaydi: kamida ${need}W kerak.`);
-    else if(psu.watts<need*1.35) w(`Quvvat bloki chegarada: ${Math.ceil(need*1.35/50)*50}W tavsiya etiladi.`);
+    if(psu.watts<need) e(`Quvvat bloki yetmaydi: kamida ${need}W kerak.`,'psu');
+    else if(psu.watts<need*1.35) w(`Quvvat bloki chegarada: ${Math.ceil(need*1.35/50)*50}W tavsiya etiladi.`,'psu');
   }
-  if(cpu&&mb&&cpu.tdp>=105&&/H610|A620|B840|B450/.test(mb.name)) w("Bu plata kuchli protsessor uchun oddiy: quvvat tizimi zaif bo'lishi mumkin.");
+  if(cpu&&mb&&cpu.tdp>=105&&/H610|A620|B840|B450/.test(mb.name)) w("Bu plata kuchli protsessor uchun oddiy: quvvat tizimi zaif bo'lishi mumkin.",'cpu-mb');
   if(ram&&ram.gb<16) w("8GB xotira hozir kam, 16GB tavsiya etiladi.");
   if(cpu&&gpu&&gpu.score>cpu.score*1.8) w("Videokarta protsessordan ancha kuchli: protsessor to'sqinlik qilishi mumkin.");
   const miss=ORDER.filter(c=>c!=="gpu"&&!sel[c]);
