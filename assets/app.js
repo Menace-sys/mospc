@@ -28,8 +28,8 @@ const PURPOSE={game:"O'yin",office:"Ofis va o'qish",edit:"Montaj va dizayn"};
 const S={cur:"uzs",mk:10,rate:12500,budget:1000,purpose:"game",pick:{},saved:[]};
 ORDER.forEach(c=>S.pick[c]=null);
 const store={
-  get(k,d){try{const v=localStorage.getItem("kompas_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
-  set(k,v){try{localStorage.setItem("kompas_"+k,JSON.stringify(v))}catch(e){}}};
+  get(k,d){try{const v=localStorage.getItem("mospc_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("mospc_"+k,JSON.stringify(v))}catch(e){}}};
 S.cur=store.get("cur","uzs");S.mk=store.get("mk",10);S.rate=store.get("rate",12500);S.saved=store.get("saved",[]);
 S.budget=store.get("budget",1000);S.purpose=store.get("purpose","game");
 const theme=store.get("theme",null);if(theme)document.documentElement.dataset.theme=theme;
@@ -206,7 +206,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#p
 
 /* ---------- actions ---------- */
 function listText(r){
-  const L=["Kompas yig'mam:",""];
+  const L=["MosPC yig'mam:",""];
   ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)}), ${p.shop}`)});
   if(!S.pick.gpu&&S.pick.cpu&&S.pick.cpu.igpu)L.push("Videokarta: yo'q, protsessordagi grafika ishlatiladi");
   L.push("","Jami: "+usdf(r.total)+" ("+uzs(r.total)+")",r.ok?"Moslik: hammasi mos":"Moslik: muammolar bor");

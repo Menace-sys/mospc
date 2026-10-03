@@ -1,4 +1,4 @@
-/* Kompas: PCB-inspired. Light = silkscreen paper, dark = solder mask. Copper accent. Layout: left-aligned editorial hero with live board; builder as two columns (parts | summary). */
+/* MosPC: PCB-inspired. Light = silkscreen paper, dark = solder mask. Copper accent. Layout: left-aligned editorial hero with live board; builder as two columns (parts | summary). */
 :root{
   --bg:#EDF2EF;--surface:#FFFFFF;--surface2:#E3EBE7;--ink:#10231E;--mute:#5B6F68;--line:#CBD8D2;
   --accent:#A85F14;--on-accent:#FFFFFF;--ok:#12805A;--warn:#9A5B00;--err:#C23B2E;
