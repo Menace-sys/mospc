@@ -163,6 +163,7 @@ function render(){
   $("#dock-t").textContent=m1(r.total);
   document.querySelectorAll("#cur-uzs,#cur-usd").forEach(b=>b.setAttribute("aria-pressed",String((b.id==="cur-uzs")===(S.cur==="uzs"))));
   store.set("pick",Object.fromEntries(ORDER.map(c=>[c,S.pick[c]?S.pick[c].id:null])));
+  if(typeof renderReady==="function"&&$("#rd"))renderReady();
 }
 
 /* ---------- picker ---------- */
@@ -256,6 +257,53 @@ $("#gear").onclick=()=>{const p=$("#pop");p.hidden=!p.hidden;$("#gear").setAttri
 $("#mk").value=S.mk;$("#rate").value=S.rate;
 $("#mk").oninput=e=>{S.mk=Math.max(0,Math.min(100,+e.target.value||0));store.set("mk",S.mk);applyMarkup(S.mk);autoRun();render()};
 $("#rate").oninput=e=>{S.rate=Math.max(1000,+e.target.value||12500);store.set("rate",S.rate);render()};
+
+/* ---------- ready builds ---------- */
+const RD_ICO={game:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8h10a4 4 0 0 1 4 4v1.5a3 3 0 0 1-5.4 1.8L14.5 14h-5l-1.1 1.3A3 3 0 0 1 3 13.5V12a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3"/><circle cx="15.5" cy="11" r=".6"/><circle cx="17" cy="12.8" r=".6"/></svg>',
+ app:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4M7 13l3-3 2 2 4-4"/></svg>'};
+let rdMemo={mk:null,m:{}};
+function rdBuild(p,i){
+  if(rdMemo.mk!==S.mk)rdMemo={mk:S.mk,m:{}};
+  const k=p.id+i;if(!(k in rdMemo.m))rdMemo.m[k]=cheapestBuild(p.t[i]);
+  return rdMemo.m[k];
+}
+const rdName=p=>p.id==="office"?t("rd.office"):p.n;
+const rdTier=(p,i)=>t((p.k==="game"?"rd.g":"rd.a")+i);
+const short=n=>n.replace(/^Core /,"").replace(/^Ryzen (\d) /,"R$1 ").replace(/ \d+GB$/,"");
+S.rk=store.get("rk","game");
+function renderReady(){
+  document.querySelectorAll("[data-rk]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.rk===S.rk)));
+  $("#rd").innerHTML=PRESETS.filter(p=>p.k===S.rk).map(p=>{
+    const tiers=p.t.map((q,i)=>{const b=rdBuild(p,i);
+      if(!b)return `<div class="rd-t off"><span class="rd-tl">${esc(rdTier(p,i))}</span><span class="rd-tg">${esc(t("rd.none"))}</span></div>`;
+      const g=b.sel.gpu?short(b.sel.gpu.name):"iGPU";
+      return `<button class="rd-t" type="button" data-rp="${p.id}" data-ti="${i}" aria-label="${esc(t("rd.load",{n:rdName(p),t:rdTier(p,i)}))}">
+        <span class="rd-tl">${esc(rdTier(p,i))}</span><span class="rd-tp num">${esc(m1(b.total))}</span>
+        <span class="rd-tg">${esc(short(b.sel.cpu.name))} · ${esc(g)} · ${b.sel.ram.gb} GB</span></button>`}).join("");
+    return `<article class="rd-card"><div class="rd-top"><span class="rd-ico">${RD_ICO[p.k]}</span><h3>${esc(rdName(p))}</h3></div>
+      ${p.est?`<p class="rd-est">${esc(t("rd.est"))}</p>`:""}<div class="rd-tiers">${tiers}</div></article>`;}).join("");
+  const n=PRESETS.filter(p=>p.k===S.rk).length;
+  $("#rd-dots").innerHTML=Array.from({length:n},(_,i)=>`<i class="${i===0?"on":""}"></i>`).join("");
+  rdDots();
+}
+function rdDots(){
+  const g=$("#rd"),c=g.querySelector(".rd-card");if(!c)return;
+  const i=Math.round(g.scrollLeft/(c.offsetWidth+10));
+  document.querySelectorAll("#rd-dots i").forEach((d,k)=>d.classList.toggle("on",k===i));
+}
+let rdRaf=0;$("#rd").addEventListener("scroll",()=>{cancelAnimationFrame(rdRaf);rdRaf=requestAnimationFrame(rdDots)},{passive:true});
+document.querySelectorAll("[data-rk]").forEach(b=>b.onclick=()=>{S.rk=b.dataset.rk;store.set("rk",S.rk);renderReady();$("#rd").scrollLeft=0;rdDots()});
+$("#rd").addEventListener("click",e=>{
+  const b=e.target.closest("[data-rp]");if(!b)return;
+  const p=PRESETS.find(x=>x.id===b.dataset.rp),i=+b.dataset.ti,r=rdBuild(p,i);if(!r)return;
+  ORDER.forEach(c=>S.pick[c]=r.sel[c]||null);
+  S.purpose=p.k==="game"?"game":p.id==="office"?"office":"edit";
+  S.budget=Math.ceil(r.total/10)*10;store.set("budget",S.budget);store.set("purpose",S.purpose);
+  render();
+  const el=$("#toast");if(el)el.textContent=t("rd.loaded",{n:rdName(p),t:rdTier(p,i)});
+  $("#yigish").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  track("preset_load",{preset:p.id,tier:i,value:r.total,currency:"USD"});
+});
 
 /* ---------- language ---------- */
 function syncLang(){

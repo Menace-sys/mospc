@@ -1,6 +1,10 @@
 /* ===== I18N: uz / ru / en ===== */
 const I18N = {
 uz:{
+ "nav.ready":"Tayyor yig'malar","rd.h":"O'yin va dasturlar uchun tayyor yig'malar","rd.sub":"O'yin yoki dasturni tanlang. Har biri uchun talablarga javob beradigan eng arzon mos yig'ma hisoblangan. Narxni bossangiz, yig'ma pastdagi ro'yxatga yuklanadi.","rd.games":"O'yinlar","rd.apps":"Dasturlar",
+ "rd.g0":"1080p · past","rd.g1":"1080p · yuqori","rd.g2":"1440p · ultra","rd.a0":"Boshlang'ich","rd.a1":"Tavsiya","rd.a2":"Professional",
+ "rd.est":"Taxminiy: PC versiyasi hali e'lon qilinmagan","rd.none":"mos yig'ma yo'q","rd.load":"{n}, {t}: yig'mani yuklash","rd.loaded":"{n} · {t} yuklandi","rd.from":"dan",
+ "rd.office":"Office, 1C",
  "meta.title":"MosPC: kompyuter yig'ish, PC konfigurator O'zbekistonda",
  "meta.desc":"MosPC — bepul kompyuter yig'ish sayti (PC konfigurator): byudjetingizga mos kompyuter yig'ing. Protsessor, plata, operativ xotira, videokarta va quvvat bloki mosligi avtomatik tekshiriladi, narxlar so'mda.",
  "lang.label":"Til",
@@ -58,6 +62,10 @@ uz:{
  "i.bneck":"Videokarta protsessordan ancha kuchli: protsessor to'sqinlik qilishi mumkin.","i.miss":"Hali tanlanmagan: {a}."
 },
 ru:{
+ "nav.ready":"Готовые сборки","rd.h":"Готовые сборки для игр и программ","rd.sub":"Выберите игру или программу. Для каждой рассчитана самая дешёвая совместимая сборка под её требования. Нажмите на цену, и сборка загрузится в список ниже.","rd.games":"Игры","rd.apps":"Программы",
+ "rd.g0":"1080p · низкие","rd.g1":"1080p · высокие","rd.g2":"1440p · ультра","rd.a0":"Начальная","rd.a1":"Рекомендуемая","rd.a2":"Профессиональная",
+ "rd.est":"Ориентировочно: версия для ПК ещё не анонсирована","rd.none":"нет подходящей сборки","rd.load":"{n}, {t}: загрузить сборку","rd.loaded":"Загружено: {n} · {t}","rd.from":"",
+ "rd.office":"Office, 1С",
  "meta.title":"MosPC: сборка ПК, конфигуратор компьютера в Узбекистане",
  "meta.desc":"MosPC — бесплатный конфигуратор ПК: соберите компьютер под свой бюджет. Совместимость процессора, платы, памяти, видеокарты и блока питания проверяется автоматически, цены в сумах.",
  "lang.label":"Язык",
@@ -115,6 +123,10 @@ ru:{
  "i.bneck":"Видеокарта намного мощнее процессора: процессор может её ограничивать.","i.miss":"Ещё не выбрано: {a}."
 },
 en:{
+ "nav.ready":"Ready builds","rd.h":"Ready builds for games and apps","rd.sub":"Pick a game or app. For each one we work out the cheapest compatible build that meets its requirements. Tap a price to load that build into the list below.","rd.games":"Games","rd.apps":"Apps",
+ "rd.g0":"1080p · low","rd.g1":"1080p · high","rd.g2":"1440p · ultra","rd.a0":"Entry","rd.a1":"Recommended","rd.a2":"Pro",
+ "rd.est":"Estimate: the PC version hasn't been announced yet","rd.none":"no matching build","rd.load":"{n}, {t}: load build","rd.loaded":"Loaded: {n} · {t}","rd.from":"",
+ "rd.office":"Office, 1C",
  "meta.title":"MosPC: PC builder and configurator in Uzbekistan",
  "meta.desc":"MosPC is a free PC builder: build a computer for your budget. CPU, motherboard, memory, graphics card and power supply compatibility is checked automatically, with prices in UZS.",
  "lang.label":"Language",
