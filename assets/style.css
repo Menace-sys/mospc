@@ -298,3 +298,12 @@ body{padding-bottom:70px}
 #pcb{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;
   -webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(0,0,0,.35),#000 95%);mask-image:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(0,0,0,.35),#000 95%)}
 @media print{#pcb{display:none}}
+/* built with */
+.maker-rel{display:flex;flex-wrap:wrap;column-gap:5px;align-items:baseline}
+.maker-ai::before{content:"·";margin-right:5px}
+@media (max-width:719px){
+  .maker-rel{flex-direction:column;row-gap:2px;overflow:visible}
+  .maker-rel>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .maker-ai{font-size:.92em;opacity:.85}
+  .maker-ai::before{content:none}
+}
