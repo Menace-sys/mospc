@@ -184,7 +184,7 @@ function openPicker(c,from){
   $("#pk-q").oninput=e=>{pk.q=e.target.value;fillPicker()};
   $("#pk-s").onchange=e=>{pk.sort=e.target.value;fillPicker()};
   $("#pk-a").onchange=e=>{pk.all=e.target.checked;fillPicker()};
-  $("#pk-l").addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b)return;S.pick[pk.c]=BYID[b.dataset.id];closePicker();render()});
+  $("#pk-l").addEventListener("click",e=>{const b=e.target.closest("[data-id]");if(!b)return;S.pick[pk.c]=BYID[b.dataset.id];track("pick_part",{category:pk.c,item_name:BYID[b.dataset.id].name});closePicker();render()});
   fillPicker();$("#pk-q").focus();
 }
 function fillPicker(){
@@ -202,6 +202,7 @@ function closePicker(){const ov=$("#ov");if(ov)ov.remove();if(pk&&pk.from&&pk.fr
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#pop").hidden=true;$("#gear").setAttribute("aria-expanded","false")}});
 
 /* ---------- actions ---------- */
+function track(n,p){try{if(window.gtag)gtag("event",n,p||{})}catch(e){}}
 function listText(r){
   const L=["MosPC yig'mam:",""];
   ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)})`)});
@@ -214,18 +215,19 @@ async function copyList(){
   const txt=listText(lastR);let ok=false;
   try{await navigator.clipboard.writeText(txt);ok=true}catch(e){}
   if(!ok){const t=document.createElement("textarea");t.value=txt;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();try{ok=document.execCommand("copy")}catch(e){}t.remove()}
+  track("copy_list",{value:Math.round(lastR.total),currency:"USD",ok:ok?1:0});
   const el=$("#toast");if(el)el.textContent=ok?"Nusxalandi. Telegramga qo'yishingiz mumkin.":"Nusxalanmadi. Brauzer ruxsat bermadi.";
 }
 function saveBuild(){
   const inp=$("#svn");const name=(inp.value.trim()||"Yig'ma "+(S.saved.length+1));
   S.saved.unshift({name,total:lastR.total,pick:Object.fromEntries(ORDER.map(c=>[c,S.pick[c]?S.pick[c].id:null]))});
-  S.saved=S.saved.slice(0,8);store.set("saved",S.saved);render();
+  S.saved=S.saved.slice(0,8);store.set("saved",S.saved);render();track("save_build",{value:Math.round(lastR.total),currency:"USD"});
   const el=$("#toast");if(el)el.textContent="Saqlandi.";
 }
 function loadBuild(i){
   const b=S.saved[i];if(!b)return;
   ORDER.forEach(c=>S.pick[c]=b.pick[c]&&BYID[b.pick[c]]?BYID[b.pick[c]]:null);
-  render();
+  render();track("load_build");
 }
 
 /* ---------- events ---------- */
@@ -242,9 +244,10 @@ document.addEventListener("click",e=>{
 });
 $("#board").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){const g=e.target.closest("[data-c]");if(g){e.preventDefault();openPicker(g.dataset.c,g)}}});
 $("#bud").addEventListener("input",e=>{S.budget=+e.target.value;autoRun();render()});
-document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.purpose=b.dataset.p;autoRun();render()});
+$("#bud").addEventListener("change",e=>track("budget_set",{value:+e.target.value,currency:"USD",purpose:S.purpose}));
+document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.purpose=b.dataset.p;autoRun();render();track("purpose_select",{purpose:b.dataset.p})});
 $("#cur-uzs").onclick=()=>{S.cur="uzs";store.set("cur","uzs");render()};
-$("#cur-usd").onclick=()=>{S.cur="usd";store.set("cur","usd");render()};
+$("#cur-usd").onclick=()=>{S.cur="usd";store.set("cur","usd");render();track("currency_usd")};
 $("#theme").onclick=()=>{
   const root=document.documentElement;
   const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
