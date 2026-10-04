@@ -40,15 +40,15 @@ for sn,sec,label,name,p in K['cooler']:
     if liquid:
         big=re.search(r'360|420|720',name)
         kind='aio'; td=340 if big else 280
-        short='Suvli sovutish '+('360 mm' if re.search('360',name) else '420 mm' if '420' in name else '720 mm' if '720' in name else '240 mm')
+        short='AIO '+('360 mm' if re.search('360',name) else '420 mm' if '420' in name else '720 mm' if '720' in name else '240 mm')
     else:
         kind='air'
         td=65 if p<=8 else 95 if p<=12 else 125 if p<=20 else 150 if p<=30 else 200 if p<=45 else 250
-        short='Havo kuleri'
+        short=''
     k=(kind,td)
     if k not in cool or p<cool[k][0]: cool[k]=(p,re.sub(r'^(Водяной кулер|Кулер)\s+','',clean(name))[:40],short)
 for (kind,td),(p,n,short) in sorted(cool.items()):
-    cat.append(dict(cat='cooler',id=f'cool-{kind}-{td}',name=f'{n} ({short}, ~{td}W gacha)',price=round(p),maxTdp=td))
+    cat.append(dict(cat='cooler',id=f'cool-{kind}-{td}',name=f'{n} ({short})' if short else n,price=round(p),maxTdp=td))
 # ---- cases
 ITX_ONLY=r'A4|TR03|Strafe ITX|CH160|MOD-3 mini|ITX'
 MATX=r'M-ATX|mikro|Micro|Mini\b|mATX|M100R|205M|O11 Air Mini|D40|U5|UMX4|CH170|CH260|CH270|ATHENA M|ATLAS M|GC9M|GC10M|M340|S380|CMT380|CC550|C102G|C103G|FORGE|Микро'
@@ -59,7 +59,7 @@ for sn,sec,label,name,p in K['case']:
     if not n: continue
     if re.match(r'Блок питание',n): continue
     if re.match(r'^(Поддержка|поддержка)',n): continue
-    n=n.replace('Pixel - Корпус Микро АТХ','Pixel mikro-ATX korpus'); n=re.sub(r'^(Корпус|Case|ПК Кейс)\s+','',n); n=clean(re.sub(r'\bCase\b','',n))[:44]
+    n=n.replace('Pixel - Корпус Микро АТХ','Pixel mATX'); n=re.sub(r'^(Корпус|Case|ПК Кейс)\s+','',n); n=clean(re.sub(r'\bCase\b','',n))[:44]
     if re.search(ITX_ONLY,n): forms=['ITX']; g=300
     elif re.search(MATX,n): forms=['mATX','ITX']; g=330
     else: forms=['ATX','mATX','ITX']; g=360

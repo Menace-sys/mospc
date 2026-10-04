@@ -13,15 +13,14 @@ const ICON={
 const icon=c=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[c]}</svg>`;
 const HUE={cpu:28,mb:150,ram:200,gpu:340,ssd:260,psu:50,case:100,cooler:180};
 const SPEC={
- cpu:p=>`${p.socket}, ${p.tdp} W${p.igpu?", grafikasi bor":""}`,
+ cpu:p=>`${p.socket}, ${p.tdp} W${p.igpu?t("spec.igpu"):""}`,
  mb:p=>`${p.socket}, ${p.ram}, ${p.form}`,
  ram:p=>`${p.type}, ${p.gb} GB`,
- gpu:p=>`taxminan ${p.tdp} W, ${p.len} mm`,
+ gpu:p=>t("spec.gpu",{w:p.tdp,l:p.len}),
  ssd:p=>p.gb>=1000?`${p.gb/1000} TB`:`${p.gb} GB`,
  psu:p=>`${p.watts} W`,
- case:p=>`${p.forms.join(", ")}, videokarta ${p.maxGpu} mm gacha`,
- cooler:p=>`taxminan ${p.maxTdp} W gacha`};
-const PURPOSE={game:"O'yin",office:"Ofis va o'qish",edit:"Montaj va dizayn"};
+ case:p=>t("spec.case",{f:p.forms.join(", "),n:p.maxGpu}),
+ cooler:p=>t("spec.cooler",{n:p.maxTdp})};
 
 /* ---------- state ---------- */
 const S={cur:"uzs",mk:10,rate:12500,budget:1000,purpose:"game",pick:{},saved:[]};
@@ -36,7 +35,7 @@ applyMarkup(S.mk);
 
 /* ---------- format ---------- */
 const nf=n=>Math.round(n).toLocaleString("en-US").replace(/,/g," ");
-const uzs=usd=>nf(Math.round(usd*S.rate/1000)*1000)+" so'm";
+const uzs=usd=>nf(Math.round(usd*S.rate/1000)*1000)+" "+t("som");
 const usdf=usd=>"$"+nf(usd);
 const m1=usd=>S.cur==="uzs"?uzs(usd):usdf(usd);
 const m2=usd=>S.cur==="uzs"?usdf(usd):uzs(usd);
@@ -84,14 +83,14 @@ function boardSVG(r){
   let nd="";
   ORDER.forEach(c=>{
     const [x,y]=NODES[c];const p=S.pick[c];const h=c==="mb"?90:NH;
-    const nm=p?(p.name.length>24?p.name.slice(0,23)+"…":p.name):"Tanlanmagan";
-    nd+=`<g class="nd ${p?"":"empty"} ${c==="mb"?"mb":""}" data-c="${c}" role="button" tabindex="0" aria-label="${esc(CATS[c].n)}: ${esc(p?p.name:"tanlanmagan")}">
+    const nm=p?(p.name.length>24?p.name.slice(0,23)+"…":p.name):t("none");
+    nd+=`<g class="nd ${p?"":"empty"} ${c==="mb"?"mb":""}" data-c="${c}" role="button" tabindex="0" aria-label="${esc(CATS[c].n)}: ${esc(p?p.name:t("none"))}">
       <rect x="${x}" y="${y}" width="${NW}" height="${h}" rx="8"/>
       <text class="k" x="${x+12}" y="${y+19}">${esc(CATS[c].n)}</text>
       <text class="v" x="${x+12}" y="${y+38}">${esc(nm)}</text>
       ${p?`<text class="p" x="${x+12}" y="${y+h-9}">${esc(m1(p.price))}</text>`:""}</g>`;
   });
-  return `<svg viewBox="0 0 640 392" role="img" aria-label="Qismlar orasidagi moslik sxemasi">${tr}${pads}${nd}</svg>`;
+  return `<svg viewBox="0 0 640 392" role="img" aria-label="${esc(t("board.svg"))}">${tr}${pads}${nd}</svg>`;
 }
 
 /* ---------- render ---------- */
@@ -108,23 +107,23 @@ function summaryHTML(r){
     lg+=`<span><b style="background:hsl(${HUE[c]} 52% var(--cl))"></b>${esc(CATS[c].n)}<em class="num">${Math.round(w)}%</em></span>`;});
   const errs=r.issues.filter(i=>i.l==="error"),warns=r.issues.filter(i=>i.l==="warn");
   let iss="";
-  if(r.ok)iss+=`<li class="o"><span>Hammasi mos. Yig'ishga tayyor.</span></li>`;
+  if(r.ok)iss+=`<li class="o"><span>${esc(t("sum.ok"))}</span></li>`;
   errs.concat(warns).forEach(i=>iss+=`<li class="${i.l==="error"?"e":"w"}"><span>${esc(i.t)}</span></li>`);
-  if(!iss)iss=`<li class="w"><span>Qism tanlang, moslik shu yerda ko'rinadi.</span></li>`;
-  const sv=S.saved.map((b,i)=>`<div class="sv"><span class="n">${esc(b.name)}</span><span class="t num">${esc(m1(b.total))}</span><button class="btn quiet sm" data-load="${i}" type="button">Ochish</button><button class="btn quiet sm" data-del="${i}" type="button" aria-label="${esc(b.name)}ni o'chirish">O'chirish</button></div>`).join("");
+  if(!iss)iss=`<li class="w"><span>${esc(t("sum.empty"))}</span></li>`;
+  const sv=S.saved.map((b,i)=>`<div class="sv"><span class="n">${esc(b.name)}</span><span class="t num">${esc(m1(b.total))}</span><button class="btn quiet sm" data-load="${i}" type="button">${esc(t("open"))}</button><button class="btn quiet sm" data-del="${i}" type="button" aria-label="${esc(t("del.aria",{n:b.name}))}">${esc(t("del"))}</button></div>`).join("");
   return `
-  <div><div class="tot-l">Jami</div><div class="tot num">${esc(m1(r.total))}</div><div class="price-sub num">${esc(m2(r.total))}</div>
-    <div class="meter" role="img" aria-label="Byudjetning ${bpct}% sarflandi"><i class="${bpct>100?"err":""}" style="width:${bpct}%"></i></div>
-    <div class="row2" style="margin-top:8px"><span>Byudjet ${esc(m1(S.budget))}</span><span class="num">${left>=0?"Qoldi "+esc(m1(left)):"Oshdi "+esc(m1(-left))}</span></div></div>
-  <div><div class="row2"><span>Taxminiy iste'mol</span><span class="num">${pw} W${psu?" / blok "+psu+" W":""}</span></div>
-    <div class="meter" role="img" aria-label="Quvvat bloki yuklamasi ${pct}%"><i class="${pcls}" style="width:${pct}%"></i></div></div>
-  ${r.total?`<div><h3>Narx taqsimoti</h3><div class="bk">${bk}</div><div class="lg">${lg}</div></div>`:""}
+  <div><div class="tot-l">${esc(t("total"))}</div><div class="tot num">${esc(m1(r.total))}</div><div class="price-sub num">${esc(m2(r.total))}</div>
+    <div class="meter" role="img" aria-label="${esc(t("meter.bud",{p:bpct}))}"><i class="${bpct>100?"err":""}" style="width:${bpct}%"></i></div>
+    <div class="row2" style="margin-top:8px"><span>${esc(t("sum.bud",{x:m1(S.budget)}))}</span><span class="num">${esc(left>=0?t("left",{x:m1(left)}):t("over",{x:m1(-left)}))}</span></div></div>
+  <div><div class="row2"><span>${esc(t("power"))}</span><span class="num">${pw} W${psu?esc(t("power.psu",{w:psu})):""}</span></div>
+    <div class="meter" role="img" aria-label="${esc(t("meter.psu",{p:pct}))}"><i class="${pcls}" style="width:${pct}%"></i></div></div>
+  ${r.total?`<div><h3>${esc(t("split"))}</h3><div class="bk">${bk}</div><div class="lg">${lg}</div></div>`:""}
   <ul class="iss">${iss}</ul>
-  <div><button class="btn pri" id="copy" type="button" ${r.total?"":"disabled"}>Ro'yxatni nusxalash</button>
+  <div><button class="btn pri" id="copy" type="button" ${r.total?"":"disabled"}>${esc(t("copy"))}</button>
     <div class="toast" id="toast" role="status"></div></div>
-  <div><h3>Saqlangan yig'malar</h3>
-    <div class="savef"><input type="text" id="svn" maxlength="30" placeholder="Nomi, masalan O'yin PC" aria-label="Yig'ma nomi"><button class="btn sec sm" id="svb" type="button" ${r.total?"":"disabled"}>Saqlash</button></div>
-    <div class="saved">${sv||'<div class="price-sub" style="margin-top:4px">Hali saqlanmagan.</div>'}</div></div>`;
+  <div><h3>${esc(t("saved.h"))}</h3>
+    <div class="savef"><input type="text" id="svn" maxlength="30" placeholder="${esc(t("save.ph"))}" aria-label="${esc(t("save.aria"))}"><button class="btn sec sm" id="svb" type="button" ${r.total?"":"disabled"}>${esc(t("save"))}</button></div>
+    <div class="saved">${sv||`<div class="price-sub" style="margin-top:4px">${esc(t("saved.none"))}</div>`}</div></div>`;
 }
 function partsHTML(){
   return ORDER.map(c=>{
@@ -132,14 +131,14 @@ function partsHTML(){
     if(!p){
       const n=partsOf(c).filter(x=>okWith(c,x)).length;
       return `<div class="part empty"><div class="ico">${icon(c)}</div>
-        <div><div class="cat">${esc(CATS[c].n)}</div><div class="nm" style="color:var(--mute);font-weight:500">${c==="gpu"?"Tanlanmagan":"Tanlanmagan"}</div></div>
-        <button class="btn sec sm go" data-add="${c}" type="button">Qo'shish</button>
-        <div class="hint">${c==="gpu"?"Tanlanmasa, protsessordagi grafika ishlatiladi. ":""}Mos variant: ${n} ta</div></div>`;}
+        <div><div class="cat">${esc(CATS[c].n)}</div><div class="nm" style="color:var(--mute);font-weight:500">${esc(t("none"))}</div></div>
+        <button class="btn sec sm go" data-add="${c}" type="button">${esc(t("add"))}</button>
+        <div class="hint">${c==="gpu"?esc(t("gpu.hint")):""}${esc(t("variants",{n}))}</div></div>`;}
     return `<div class="part"><div class="ico">${icon(c)}</div>
       <div><div class="cat">${esc(CATS[c].n)}</div><div class="nm">${esc(p.name)}</div><div class="sp">${esc(SPEC[c](p))}</div></div>
       <div class="pr"><div class="price num">${esc(m1(p.price))}</div><div class="price-sub num">${esc(m2(p.price))}</div></div>
-      <div class="acts"><button class="btn sec sm" data-add="${c}" type="button">O'zgartirish</button>
-        <button class="btn quiet sm grow" data-rm="${c}" type="button">Olib tashlash</button></div></div>`;
+      <div class="acts"><button class="btn sec sm" data-add="${c}" type="button">${esc(t("change"))}</button>
+        <button class="btn quiet sm grow" data-rm="${c}" type="button">${esc(t("remove"))}</button></div></div>`;
   }).join("");
 }
 let lastR=null;
@@ -157,7 +156,7 @@ function render(){
   const stat=$("#stat");
   const filled=ORDER.filter(c=>S.pick[c]).length;
   stat.className="stat"+(errs?" err":r.ok?"":" warn");
-  $("#stat-t").textContent=errs?`${errs} ta mos kelmaslik`:r.ok?"Hammasi mos":`${filled}/8 qism tanlangan`;
+  $("#stat-t").textContent=errs?t("stat.err",{n:errs}):r.ok?t("stat.ok"):t("stat.fill",{n:filled});
   /* builder */
   $("#parts").innerHTML=partsHTML();
   $("#summary").innerHTML=summaryHTML(r);
@@ -172,11 +171,11 @@ function openPicker(c,from){
   closePicker();
   pk={c,q:"",sort:"price",all:false,from:from||document.activeElement};
   const ov=document.createElement("div");ov.className="ov";ov.id="ov";
-  ov.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-label="${esc(CATS[c].n)} tanlash">
-    <div class="dlg-h"><div class="dlg-t"><b>${esc(CATS[c].n)}</b><button class="btn quiet sm" id="pk-x" type="button">Yopish</button></div>
-    <div class="dlg-c"><input type="search" id="pk-q" placeholder="Qidirish" aria-label="Qidirish">
-      <select id="pk-s" aria-label="Saralash"><option value="price">Arzoni birinchi</option><option value="priceDesc">Qimmati birinchi</option><option value="name">Nomi bo'yicha</option></select>
-      <label><input type="checkbox" id="pk-a"> Mos kelmaydiganlarni ham ko'rsat</label></div></div>
+  ov.innerHTML=`<div class="dlg" role="dialog" aria-modal="true" aria-label="${esc(t("pk.aria",{c:CATS[c].n}))}">
+    <div class="dlg-h"><div class="dlg-t"><b>${esc(CATS[c].n)}</b><button class="btn quiet sm" id="pk-x" type="button">${esc(t("close"))}</button></div>
+    <div class="dlg-c"><input type="search" id="pk-q" placeholder="${esc(t("search"))}" aria-label="${esc(t("search"))}">
+      <select id="pk-s" aria-label="${esc(t("sort"))}"><option value="price">${esc(t("sort.price"))}</option><option value="priceDesc">${esc(t("sort.desc"))}</option><option value="name">${esc(t("sort.name"))}</option></select>
+      <label><input type="checkbox" id="pk-a"> ${esc(t("pk.all"))}</label></div></div>
     <div class="dlg-l" id="pk-l"></div></div>`;
   document.body.appendChild(ov);
   ov.addEventListener("click",e=>{if(e.target===ov)closePicker()});
@@ -196,7 +195,7 @@ function fillPicker(){
   $("#pk-l").innerHTML=items.length?items.map(({p,bad})=>`<button class="opt ${p.id===cur?"cur":""}" type="button" data-id="${esc(p.id)}">
     <span><span class="nm">${esc(p.name)}</span><br><span class="sp">${esc(SPEC[c](p))}</span>${bad?`<br><span class="bad">${esc(bad)}</span>`:""}</span>
     <span style="text-align:right"><span class="price num">${esc(m1(p.price))}</span><br><span class="price-sub num">${esc(m2(p.price))}</span></span></button>`).join("")
-    :`<div class="none">Mos qism topilmadi.${pk.all?"":" \"Mos kelmaydiganlarni ham ko'rsat\"ni yoqib ko'ring."}</div>`;
+    :`<div class="none">${esc(t("pk.none"))}${pk.all?"":esc(t("pk.hint"))}</div>`;
 }
 function closePicker(){const ov=$("#ov");if(ov)ov.remove();if(pk&&pk.from&&pk.from.focus&&document.contains(pk.from))try{pk.from.focus()}catch(e){}pk=null}
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#pop").hidden=true;$("#gear").setAttribute("aria-expanded","false")}});
@@ -204,10 +203,10 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#p
 /* ---------- actions ---------- */
 function track(n,p){try{if(window.gtag)gtag("event",n,p||{})}catch(e){}}
 function listText(r){
-  const L=["MosPC yig'mam:",""];
+  const L=[t("list.h"),""];
   ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)})`)});
-  if(!S.pick.gpu&&S.pick.cpu&&S.pick.cpu.igpu)L.push("Videokarta: yo'q, protsessordagi grafika ishlatiladi");
-  L.push("","Jami: "+usdf(r.total)+" ("+uzs(r.total)+")",r.ok?"Moslik: hammasi mos":"Moslik: muammolar bor");
+  if(!S.pick.gpu&&S.pick.cpu&&S.pick.cpu.igpu)L.push(t("list.igpu"));
+  L.push("",t("list.total")+usdf(r.total)+" ("+uzs(r.total)+")",r.ok?t("list.ok"):t("list.bad"));
   r.issues.filter(i=>i.l==="error").forEach(i=>L.push("! "+i.t));
   return L.join("\n");
 }
@@ -216,13 +215,13 @@ async function copyList(){
   try{await navigator.clipboard.writeText(txt);ok=true}catch(e){}
   if(!ok){const t=document.createElement("textarea");t.value=txt;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();try{ok=document.execCommand("copy")}catch(e){}t.remove()}
   track("copy_list",{value:Math.round(lastR.total),currency:"USD",ok:ok?1:0});
-  const el=$("#toast");if(el)el.textContent=ok?"Nusxalandi. Telegramga qo'yishingiz mumkin.":"Nusxalanmadi. Brauzer ruxsat bermadi.";
+  const el=$("#toast");if(el)el.textContent=ok?t("toast.ok"):t("toast.no");
 }
 function saveBuild(){
-  const inp=$("#svn");const name=(inp.value.trim()||"Yig'ma "+(S.saved.length+1));
+  const inp=$("#svn");const name=(inp.value.trim()||t("save.def",{n:S.saved.length+1}));
   S.saved.unshift({name,total:lastR.total,pick:Object.fromEntries(ORDER.map(c=>[c,S.pick[c]?S.pick[c].id:null]))});
   S.saved=S.saved.slice(0,8);store.set("saved",S.saved);render();track("save_build",{value:Math.round(lastR.total),currency:"USD"});
-  const el=$("#toast");if(el)el.textContent="Saqlandi.";
+  const el=$("#toast");if(el)el.textContent=t("toast.saved");
 }
 function loadBuild(i){
   const b=S.saved[i];if(!b)return;
@@ -258,6 +257,26 @@ $("#mk").value=S.mk;$("#rate").value=S.rate;
 $("#mk").oninput=e=>{S.mk=Math.max(0,Math.min(100,+e.target.value||0));store.set("mk",S.mk);applyMarkup(S.mk);autoRun();render()};
 $("#rate").oninput=e=>{S.rate=Math.max(1000,+e.target.value||12500);store.set("rate",S.rate);render()};
 
+/* ---------- language ---------- */
+function syncLang(){
+  applyStatic();
+  $("#lang-c").textContent=LANG.toUpperCase();
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANG)));
+}
+function setLang(l){
+  if(!LANGS.includes(l)||l===LANG)return;
+  LANG=l;store.set("lang",l);
+  try{const u=new URL(location.href);if(l==="uz")u.searchParams.delete("lang");else u.searchParams.set("lang",l);history.replaceState(null,"",u.pathname+u.search+u.hash)}catch(e){}
+  syncLang();render();
+  if(pk){const c=pk.c,f=pk.from;openPicker(c,f)}
+  track("language",{lang:l});
+}
+const langMenu=open=>{$("#lang-m").hidden=!open;$("#lang").setAttribute("aria-expanded",String(open))};
+$("#lang").onclick=e=>{e.stopPropagation();langMenu($("#lang-m").hidden)};
+$("#lang-m").addEventListener("click",e=>{const b=e.target.closest("[data-lang]");if(!b)return;e.stopPropagation();langMenu(false);setLang(b.dataset.lang)});
+document.addEventListener("click",e=>{if(!e.target.closest(".lng"))langMenu(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")langMenu(false)});
+
 /* ---------- start ---------- */
-autoRun();render();
+syncLang();autoRun();render();
 })();

@@ -10,6 +10,10 @@
 <meta name="description" content="MosPC — bepul kompyuter yig'ish sayti (PC konfigurator): byudjetingizga mos kompyuter yig'ing. Protsessor, plata, operativ xotira, videokarta va quvvat bloki mosligi avtomatik tekshiriladi, narxlar so'mda.">
 <meta name="keywords" content="mospc, kompyuter yig'ish, pc yig'ish, pc konfigurator, kompyuter narxlari, videokarta narxi, o'zbekiston, toshkent, сборка пк, конфигуратор пк">
 <link rel="canonical" href="https://mospc.uz/">
+<link rel="alternate" hreflang="uz" href="https://mospc.uz/">
+<link rel="alternate" hreflang="ru" href="https://mospc.uz/?lang=ru">
+<link rel="alternate" hreflang="en" href="https://mospc.uz/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://mospc.uz/">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#0D2F28">
 <meta property="og:type" content="website">
@@ -32,7 +36,7 @@
 {"@type":"Organization","name":"MosPC","url":"https://mospc.uz/","logo":"https://mospc.uz/icon-512.png"}]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600&family=Poppins:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "MosPC nima?", "acceptedAnswer": {"@type": "Answer", "text": "MosPC (mospc.uz) — O'zbekistondagi bepul kompyuter yig'ish sayti, ya'ni PC konfigurator. Siz byudjetni tanlaysiz, sayt protsessor, ona plata, operativ xotira, videokarta, SSD, korpus, kuler va quvvat blokini bir-biriga mos qilib tanlab beradi. Bu e'lonlar sayti yoki do'kon emas."}}, {"@type": "Question", "name": "Narxlar qayerdan olinadi?", "acceptedAnswer": {"@type": "Answer", "text": "Narxlar O'zbekistondagi kompyuter do'konlarining narxlar ro'yxatidan olinadi va so'mda ko'rsatiladi. Ular taxminiy: sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang."}}, {"@type": "Question", "name": "Moslik qanday tekshiriladi?", "acceptedAnswer": {"@type": "Answer", "text": "Protsessor va plata soketi, xotira turi (DDR4 yoki DDR5), plata va korpus o'lchami, videokarta uzunligi, kuler quvvati va quvvat bloki yetarliligi avtomatik tekshiriladi."}}, {"@type": "Question", "name": "Foydalanish pullikmi?", "acceptedAnswer": {"@type": "Answer", "text": "Yo'q, MosPC bepul va ro'yxatdan o'tish talab qilinmaydi."}}, {"@type": "Question", "name": "Что такое MosPC?", "acceptedAnswer": {"@type": "Answer", "text": "MosPC (mospc.uz) — бесплатный конфигуратор ПК в Узбекистане. Укажите бюджет, и сайт подберёт совместимые процессор, материнскую плату, оперативную память, видеокарту, SSD, корпус, кулер и блок питания с ценами в сумах. MosPC не является сайтом объявлений или магазином."}}, {"@type": "Question", "name": "Откуда цены?", "acceptedAnswer": {"@type": "Answer", "text": "Цены взяты из прайс-листов компьютерных магазинов Узбекистана и указаны в сумах. Цены ориентировочные: перед покупкой уточняйте наличие и стоимость в магазине."}}, {"@type": "Question", "name": "Что проверяется?", "acceptedAnswer": {"@type": "Answer", "text": "Сокет процессора и платы, тип памяти (DDR4 или DDR5), форм-фактор платы и корпуса, длина видеокарты, мощность кулера и запас блока питания."}}]}</script>
 </head>
@@ -42,15 +46,23 @@
     <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="var(--bd-bg)" stroke="var(--cu)" stroke-width="2"/><path d="M9.5 16.5l4.5 4.5 8.5-9.5" fill="none" stroke="var(--cu)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>Mos<b style="font-weight:600;color:var(--accent)">PC</b></span>
   </a>
-  <nav class="nav" aria-label="Bo'limlar"><a href="#yigish">Yig'ish</a><a href="#tekshiruv">Tekshiruv</a><a href="#haqida">Haqida</a></nav>
+  <nav class="nav" aria-label="Bo'limlar" data-ia="aria-label:nav.aria"><a href="#yigish" data-i="nav.build">Yig'ish</a><a href="#tekshiruv" data-i="nav.check">Tekshiruv</a><a href="#haqida" data-i="nav.about">Haqida</a></nav>
   <div class="tools">
-    <div class="seg" role="group" aria-label="Valyuta"><button id="cur-uzs" type="button" aria-pressed="true">so'm</button><button id="cur-usd" type="button" aria-pressed="false">$</button></div>
-    <button class="ib" id="theme" type="button" aria-label="Mavzuni almashtirish"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
-    <button class="ib" id="gear" type="button" aria-label="Sozlamalar" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.4 2.6h4l.4-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg></button>
+    <div class="lng">
+      <button class="ib lng-b" id="lang" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Til" data-ia="aria-label:lang.label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg><span id="lang-c">UZ</span></button>
+      <div class="lng-m" id="lang-m" hidden>
+        <button type="button" data-lang="uz" lang="uz">O'zbekcha</button>
+        <button type="button" data-lang="ru" lang="ru">Русский</button>
+        <button type="button" data-lang="en" lang="en">English</button>
+      </div>
+    </div>
+    <div class="seg" role="group" aria-label="Valyuta" data-ia="aria-label:cur.aria"><button id="cur-uzs" type="button" aria-pressed="true" data-i="som">so'm</button><button id="cur-usd" type="button" aria-pressed="false">$</button></div>
+    <button class="ib" id="theme" type="button" aria-label="Mavzuni almashtirish" data-ia="aria-label:theme.aria"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
+    <button class="ib" id="gear" type="button" aria-label="Sozlamalar" data-ia="aria-label:gear.aria" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14.2 3h-4l-.4 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2l.4 2.6h4l.4-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg></button>
     <div class="pop" id="pop" hidden>
-      <label for="mk">Ustama, %</label><input id="mk" type="number" min="0" max="100" step="1">
-      <label for="rate">Kurs, so'm uchun 1 $</label><input id="rate" type="number" min="1000" step="50">
-      <p>Narxlar do'konning ulgurji ro'yxatidan olingan. Ustama chakana narxga yaqinlashtiradi.</p>
+      <label for="mk" data-i="pop.mk">Ustama, %</label><input id="mk" type="number" min="0" max="100" step="1">
+      <label for="rate" data-i="pop.rate">Kurs, so'm uchun 1 $</label><input id="rate" type="number" min="1000" step="50">
+      <p data-i="pop.note">Narxlar do'konning ulgurji ro'yxatidan olingan. Ustama chakana narxga yaqinlashtiradi.</p>
     </div>
   </div>
 </div></header>
@@ -58,77 +70,77 @@
 <main id="top">
 <section class="hero"><div class="shell">
   <div>
-    <h1>PC'ingizni byudjetga qarab yig'ing</h1>
-    <p class="lead">Summani tanlang, MosPC mos qismlarni do'kon narxlarida tanlab beradi. Soket, xotira turi, korpus va quvvat bloki avtomatik tekshiriladi.</p>
+    <h1 data-i="hero.h1">PC'ingizni byudjetga qarab yig'ing</h1>
+    <p class="lead" data-i="hero.lead">Summani tanlang, MosPC mos qismlarni do'kon narxlarida tanlab beradi. Soket, xotira turi, korpus va quvvat bloki avtomatik tekshiriladi.</p>
     <div class="ctl">
       <div class="ctl-top">
-        <div><div class="lab">Byudjet</div><div class="amt num" id="amt"></div><div class="amt-sub num" id="amt-sub"></div></div>
+        <div><div class="lab" data-i="budget">Byudjet</div><div class="amt num" id="amt"></div><div class="amt-sub num" id="amt-sub"></div></div>
       </div>
-      <input id="bud" type="range" aria-label="Byudjet, dollarda">
+      <input id="bud" type="range" aria-label="Byudjet, dollarda" data-ia="aria-label:budget.aria">
       <div class="rng num"><span id="rmin"></span><span id="rmax"></span></div>
-      <div class="chips" role="group" aria-label="Maqsad">
-        <button class="chip" type="button" data-p="game" aria-pressed="true">O'yin</button>
-        <button class="chip" type="button" data-p="office" aria-pressed="false">Ofis va o'qish</button>
-        <button class="chip" type="button" data-p="edit" aria-pressed="false">Montaj va dizayn</button>
+      <div class="chips" role="group" aria-label="Maqsad" data-ia="aria-label:purpose.aria">
+        <button class="chip" type="button" data-p="game" data-i="p.game" aria-pressed="true">O'yin</button>
+        <button class="chip" type="button" data-p="office" data-i="p.office" aria-pressed="false">Ofis va o'qish</button>
+        <button class="chip" type="button" data-p="edit" data-i="p.edit" aria-pressed="false">Montaj va dizayn</button>
       </div>
     </div>
-    <div class="hero-cta"><a class="btn pri" href="#yigish">Qismlarni ko'rish</a></div>
+    <div class="hero-cta"><a class="btn pri" href="#yigish" data-i="hero.cta">Qismlarni ko'rish</a></div>
   </div>
-  <div class="board" aria-label="Moslik sxemasi">
-    <div class="board-h"><b>Moslik sxemasi</b><span class="stat" id="stat"><i></i><span id="stat-t"></span></span></div>
+  <div class="board" aria-label="Moslik sxemasi" data-ia="aria-label:board.t">
+    <div class="board-h"><b data-i="board.t">Moslik sxemasi</b><span class="stat" id="stat"><i></i><span id="stat-t"></span></span></div>
     <div id="board"></div>
-    <div class="board-f">Qismni bosing, o'zgartirish ro'yxati ochiladi. Qizil chiziq mos kelmaslikni ko'rsatadi.</div>
+    <div class="board-f" data-i="board.f">Qismni bosing, o'zgartirish ro'yxati ochiladi. Qizil chiziq mos kelmaslikni ko'rsatadi.</div>
   </div>
 </div></section>
 
 <section class="sec" id="yigish"><div class="shell">
-  <h2>Yig'ma</h2>
-  <p class="sub">Avto-yig'ishni davom ettiring: istalgan qismni almashtiring yoki olib tashlang. Ro'yxat mos variantlarni arzonidan boshlab ko'rsatadi.</p>
+  <h2 data-i="build.h">Yig'ma</h2>
+  <p class="sub" data-i="build.sub">Avto-yig'ishni davom ettiring: istalgan qismni almashtiring yoki olib tashlang. Ro'yxat mos variantlarni arzonidan boshlab ko'rsatadi.</p>
   <div class="build">
     <div class="parts" id="parts"></div>
-    <aside class="sum" id="summary" aria-label="Yig'ma xulosasi"></aside>
+    <aside class="sum" id="summary" aria-label="Yig'ma xulosasi" data-ia="aria-label:sum.aria"></aside>
   </div>
 </div></section>
 
 <section class="sec" id="tekshiruv"><div class="shell">
-  <h2>MosPC nimani tekshiradi</h2>
-  <p class="sub">Qism tanlanganda quyidagi juftliklar tekshiriladi. Mos kelmasa, sxemada chiziq qizarib, sababi yoziladi.</p>
+  <h2 data-i="chk.h">MosPC nimani tekshiradi</h2>
+  <p class="sub" data-i="chk.sub">Qism tanlanganda quyidagi juftliklar tekshiriladi. Mos kelmasa, sxemada chiziq qizarib, sababi yoziladi.</p>
   <div class="checks">
-    <div class="ck"><b>Protsessor va plata</b><span>Soket bir xil bo'lishi kerak: AM4, AM5, LGA1700 yoki LGA1851.</span></div>
-    <div class="ck"><b>Plata va xotira</b><span>DDR4 platasiga DDR5 xotira o'rnatilmaydi, aksincha ham.</span></div>
-    <div class="ck"><b>Plata va korpus</b><span>ATX plata mikro-ATX korpusga sig'maydi. Korpus plata o'lchamini qo'llashi kerak.</span></div>
-    <div class="ck"><b>Videokarta va korpus</b><span>Videokarta uzunligi korpus ruxsat bergan chegaradan oshmasligi kerak.</span></div>
-    <div class="ck"><b>Protsessor va kuler</b><span>Kuler protsessor chiqaradigan issiqlikni olib keta olishi kerak.</span></div>
-    <div class="ck"><b>Quvvat bloki</b><span>Protsessor va videokarta iste'moli ustiga zaxira qo'shiladi. Blok kuchsiz bo'lsa ogohlantiriladi.</span></div>
-    <div class="ck"><b>Videokarta kerakmi</b><span>Protsessorda o'rnatilgan grafika bo'lmasa, videokartasiz yig'ma ishlamaydi.</span></div>
+    <div class="ck"><b data-i="chk.1b">Protsessor va plata</b><span data-i="chk.1">Soket bir xil bo'lishi kerak: AM4, AM5, LGA1700 yoki LGA1851.</span></div>
+    <div class="ck"><b data-i="chk.2b">Plata va xotira</b><span data-i="chk.2">DDR4 platasiga DDR5 xotira o'rnatilmaydi, aksincha ham.</span></div>
+    <div class="ck"><b data-i="chk.3b">Plata va korpus</b><span data-i="chk.3">ATX plata mikro-ATX korpusga sig'maydi. Korpus plata o'lchamini qo'llashi kerak.</span></div>
+    <div class="ck"><b data-i="chk.4b">Videokarta va korpus</b><span data-i="chk.4">Videokarta uzunligi korpus ruxsat bergan chegaradan oshmasligi kerak.</span></div>
+    <div class="ck"><b data-i="chk.5b">Protsessor va kuler</b><span data-i="chk.5">Kuler protsessor chiqaradigan issiqlikni olib keta olishi kerak.</span></div>
+    <div class="ck"><b data-i="chk.6b">Quvvat bloki</b><span data-i="chk.6">Protsessor va videokarta iste'moli ustiga zaxira qo'shiladi. Blok kuchsiz bo'lsa ogohlantiriladi.</span></div>
+    <div class="ck"><b data-i="chk.7b">Videokarta kerakmi</b><span data-i="chk.7">Protsessorda o'rnatilgan grafika bo'lmasa, videokartasiz yig'ma ishlamaydi.</span></div>
   </div>
 </div></section>
 
 </main>
 
 <section class="sec" id="haqida"><div class="shell">
-  <h2>MosPC haqida</h2>
-  <p class="sub">Ko'p beriladigan savollar.</p>
+  <h2 data-i="faq.h">MosPC haqida</h2>
+  <p class="sub" data-i="faq.sub">Ko'p beriladigan savollar.</p>
   <div class="faq">
-    <details class="qa"><summary>MosPC nima?</summary><p>MosPC (mospc.uz) — O'zbekistondagi bepul kompyuter yig'ish sayti, ya'ni PC konfigurator. Siz byudjetni tanlaysiz, sayt protsessor, ona plata, operativ xotira, videokarta, SSD, korpus, kuler va quvvat blokini bir-biriga mos qilib tanlab beradi. Bu e'lonlar sayti yoki do'kon emas.</p></details>
-    <details class="qa"><summary>Narxlar qayerdan olinadi?</summary><p>Narxlar O'zbekistondagi kompyuter do'konlarining narxlar ro'yxatidan olinadi va so'mda ko'rsatiladi. Ular taxminiy: sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang.</p></details>
-    <details class="qa"><summary>Moslik qanday tekshiriladi?</summary><p>Protsessor va plata soketi, xotira turi (DDR4 yoki DDR5), plata va korpus o'lchami, videokarta uzunligi, kuler quvvati va quvvat bloki yetarliligi avtomatik tekshiriladi.</p></details>
-    <details class="qa"><summary>Foydalanish pullikmi?</summary><p>Yo'q, MosPC bepul va ro'yxatdan o'tish talab qilinmaydi.</p></details>
-  </div>
-  <h3 class="faq-h" lang="ru">О MosPC</h3>
-  <div class="faq" lang="ru">
-    <details class="qa"><summary>Что такое MosPC?</summary><p>MosPC (mospc.uz) — бесплатный конфигуратор ПК в Узбекистане. Укажите бюджет, и сайт подберёт совместимые процессор, материнскую плату, оперативную память, видеокарту, SSD, корпус, кулер и блок питания с ценами в сумах. MosPC не является сайтом объявлений или магазином.</p></details>
-    <details class="qa"><summary>Откуда цены?</summary><p>Цены взяты из прайс-листов компьютерных магазинов Узбекистана и указаны в сумах. Цены ориентировочные: перед покупкой уточняйте наличие и стоимость в магазине.</p></details>
-    <details class="qa"><summary>Что проверяется?</summary><p>Сокет процессора и платы, тип памяти (DDR4 или DDR5), форм-фактор платы и корпуса, длина видеокарты, мощность кулера и запас блока питания.</p></details>
+    <details class="qa"><summary data-i="faq.1q">MosPC nima?</summary><p data-i="faq.1a">MosPC (mospc.uz) — O'zbekistondagi bepul kompyuter yig'ish sayti, ya'ni PC konfigurator. Siz byudjetni tanlaysiz, sayt protsessor, ona plata, operativ xotira, videokarta, SSD, korpus, kuler va quvvat blokini bir-biriga mos qilib tanlab beradi. Bu e'lonlar sayti yoki do'kon emas.</p></details>
+    <details class="qa"><summary data-i="faq.2q">Narxlar qayerdan olinadi?</summary><p data-i="faq.2a">Narxlar O'zbekistondagi kompyuter do'konlarining narxlar ro'yxatidan olinadi va so'mda ko'rsatiladi. Ular taxminiy: sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang.</p></details>
+    <details class="qa"><summary data-i="faq.3q">Moslik qanday tekshiriladi?</summary><p data-i="faq.3a">Protsessor va plata soketi, xotira turi (DDR4 yoki DDR5), plata va korpus o'lchami, videokarta uzunligi, kuler quvvati va quvvat bloki yetarliligi avtomatik tekshiriladi.</p></details>
+    <details class="qa"><summary data-i="faq.4q">Foydalanish pullikmi?</summary><p data-i="faq.4a">Yo'q, MosPC bepul va ro'yxatdan o'tish talab qilinmaydi.</p></details>
   </div>
 </div></section>
 <footer class="ftr"><div class="shell">
-  <div><b>MosPC</b> (mospc.uz): O'zbekistonda kompyuter yig'ish uchun bepul PC konfigurator. Protsessor, ona plata, operativ xotira, videokarta, SSD, korpus va quvvat blokini so'mdagi narxlarda tanlang.</div>
-  <div>Narxlar taxminiy. Sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang.</div>
-  <div>Korpus o'lchamlari va kuler quvvati model nomidan taxmin qilingan.</div>
+  <div data-ih="ftr.1"><b>MosPC</b> (mospc.uz): O'zbekistonda kompyuter yig'ish uchun bepul PC konfigurator. Protsessor, ona plata, operativ xotira, videokarta, SSD, korpus va quvvat blokini so'mdagi narxlarda tanlang.</div>
+  <div data-i="ftr.2">Narxlar taxminiy. Sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang.</div>
+  <div data-i="ftr.3">Korpus o'lchamlari va kuler quvvati model nomidan taxmin qilingan.</div>
+  <div class="maker">
+    <span class="maker-by" data-i="ftr.by">Ishlab chiqaruvchi</span>
+    <span class="menace" role="img" aria-label="MENACE"><span style="color:#E9E4F1">M</span><span style="color:#E2C7DE">E</span><span style="color:#E0A6C3">N</span><span class="lam" style="color:#E287A8"><svg viewBox="0 0 72 70" aria-hidden="true"><path d="M3 70 36 2 69 70"/></svg></span><span style="color:#E36D8D">C</span><span style="color:#E4577A">E</span></span>
+    <span class="maker-rel">© MosPC · <span data-i="ftr.rel">2026-yilda chiqarilgan</span></span>
+  </div>
 </div></footer>
-<div class="dock" id="dock"><div><div class="tot-l">Jami</div><div class="tot num" id="dock-t"></div></div><a class="btn pri sm" href="#summary">Xulosa</a></div>
+<div class="dock" id="dock"><div><div class="tot-l" data-i="total">Jami</div><div class="tot num" id="dock-t"></div></div><a class="btn pri sm" href="#summary" data-i="dock.btn">Xulosa</a></div>
 <script src="data/catalog.js"></script>
+<script src="assets/i18n.js"></script>
 <script src="assets/logic.js"></script>
 <script src="assets/app.js"></script>
 </body>

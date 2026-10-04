@@ -1,9 +1,6 @@
 /* ===== LOGIC ===== */
-const CATS = {
-  cpu:{n:"Protsessor",e:"🧠"}, mb:{n:"Plata",e:"🔌"}, ram:{n:"Operativ xotira",e:"📏"},
-  gpu:{n:"Videokarta",e:"🎮"}, ssd:{n:"SSD",e:"💾"}, psu:{n:"Quvvat bloki",e:"⚡"},
-  case:{n:"Korpus",e:"🧱"}, cooler:{n:"Kuler",e:"❄️"}
-};
+const CATS = {};
+["cpu","mb","ram","gpu","ssd","psu","case","cooler"].forEach(c=>{CATS[c]={get n(){return t("cat."+c)}}});
 const ORDER = ["cpu","mb","ram","gpu","ssd","psu","case","cooler"];
 const BYID = {}; CATALOG.forEach(p=>{BYID[p.id]=p;p.base=p.price});
 function applyMarkup(m){CATALOG.forEach(p=>{p.price=Math.round(p.base*(1+m/100))})}
@@ -11,24 +8,24 @@ const partsOf = c => CATALOG.filter(p=>p.cat===c);
 
 /* sel: {cat: part|null} (part may carry .price override) */
 function evaluate(sel){
-  const iss=[]; const e=(t,g)=>iss.push({l:"error",t,g}), w=(t,g)=>iss.push({l:"warn",t,g});
+  const iss=[]; const e=(k,v,g)=>iss.push({l:"error",k,t:t(k,v),g}), w=(k,v,g)=>iss.push({l:"warn",k,t:t(k,v),g});
   const {cpu,mb,ram,gpu,psu,case:cs,cooler,ssd}=sel;
-  if(cpu&&mb&&cpu.socket!==mb.socket) e(`Protsessor soketi ${cpu.socket}, plata soketi ${mb.socket}: mos emas.`,'cpu-mb');
-  if(mb&&ram&&mb.ram!==ram.type) e(`Plata ${mb.ram} xotira qabul qiladi, siz ${ram.type} tanladingiz.`,'ram-mb');
-  if(mb&&cs&&!cs.forms.includes(mb.form)) e(`${mb.form} plata bu korpusga sig'maydi.`,'mb-case');
-  if(gpu&&cs&&gpu.len>cs.maxGpu) e(`Videokarta ${gpu.len} mm, korpusga eng ko'pi ${cs.maxGpu} mm sig'adi.`,'gpu-case');
-  if(cpu&&cooler&&cooler.maxTdp<cpu.tdp) e(`Bu kuler ${cpu.tdp}W protsessorni sovita olmaydi.`,'cooler-cpu');
-  if(cpu&&!gpu&&!cpu.igpu) e("Bu protsessorda o'rnatilgan grafika yo'q: videokarta kerak.","gpu-mb");
+  if(cpu&&mb&&cpu.socket!==mb.socket) e('i.socket',{a:cpu.socket,b:mb.socket},'cpu-mb');
+  if(mb&&ram&&mb.ram!==ram.type) e('i.ram',{a:mb.ram,b:ram.type},'ram-mb');
+  if(mb&&cs&&!cs.forms.includes(mb.form)) e('i.form',{a:mb.form},'mb-case');
+  if(gpu&&cs&&gpu.len>cs.maxGpu) e('i.len',{a:gpu.len,b:cs.maxGpu},'gpu-case');
+  if(cpu&&cooler&&cooler.maxTdp<cpu.tdp) e('i.cool',{a:cpu.tdp},'cooler-cpu');
+  if(cpu&&!gpu&&!cpu.igpu) e('i.igpu',null,'gpu-mb');
   const need=(cpu?cpu.tdp:0)+(gpu?gpu.tdp:0)+100;
   if(psu&&(cpu||gpu)){
-    if(psu.watts<need) e(`Quvvat bloki yetmaydi: kamida ${need}W kerak.`,'psu');
-    else if(psu.watts<need*1.35) w(`Quvvat bloki chegarada: ${Math.ceil(need*1.35/50)*50}W tavsiya etiladi.`,'psu');
+    if(psu.watts<need) e('i.psu',{a:need},'psu');
+    else if(psu.watts<need*1.35) w('i.psuw',{a:Math.ceil(need*1.35/50)*50},'psu');
   }
-  if(cpu&&mb&&cpu.tdp>=105&&/H610|A620|B840|B450/.test(mb.name)) w("Bu plata kuchli protsessor uchun oddiy: quvvat tizimi zaif bo'lishi mumkin.",'cpu-mb');
-  if(ram&&ram.gb<16) w("8GB xotira hozir kam, 16GB tavsiya etiladi.");
-  if(cpu&&gpu&&gpu.score>cpu.score*1.8) w("Videokarta protsessordan ancha kuchli: protsessor to'sqinlik qilishi mumkin.");
+  if(cpu&&mb&&cpu.tdp>=105&&/H610|A620|B840|B450/.test(mb.name)) w('i.vrm',null,'cpu-mb');
+  if(ram&&ram.gb<16) w('i.8gb');
+  if(cpu&&gpu&&gpu.score>cpu.score*1.8) w('i.bneck');
   const miss=ORDER.filter(c=>c!=="gpu"&&!sel[c]);
-  if(miss.length) w("Hali tanlanmagan: "+miss.map(c=>CATS[c].n).join(", ")+".");
+  if(miss.length) w('i.miss',{a:miss.map(c=>CATS[c].n).join(", ")});
   const total=ORDER.reduce((s,c)=>s+(sel[c]?sel[c].price:0),0);
   return {issues:iss,total,watts:need,ok:!iss.some(i=>i.l==="error")&&miss.length===0};
 }
@@ -57,8 +54,8 @@ function autoBuild(budget,purpose,offers){
      const ssd=cheapest(ssds,s=>s.gb>=512);
      const sel={cpu,mb,ram,gpu,ssd,psu,case:cs,cooler:cool};
      const r=evaluate(sel); if(!r.ok||r.total>budget)continue;
-     if(r.issues.some(i=>i.t.includes("oddiy: quvvat")))continue;
-     const sc=W.cpu*cpu.score+(gpu?W.gpu*gpu.score:0)+W.ram*Math.min(ram.gb,32)+(r.issues.some(i=>i.l==="warn"&&i.t.includes("to'sqinlik"))?25:0)*-1+(cpu.igpu&&!gpu?5:0)-(W.pen||0)*r.total/10;
+     if(r.issues.some(i=>i.k==="i.vrm"))continue;
+     const sc=W.cpu*cpu.score+(gpu?W.gpu*gpu.score:0)+W.ram*Math.min(ram.gb,32)+(r.issues.some(i=>i.k==="i.bneck")?25:0)*-1+(cpu.igpu&&!gpu?5:0)-(W.pen||0)*r.total/10;
      if(!best||sc>best.sc||(sc===best.sc&&r.total<best.total))best={sel,sc,total:r.total};
     }}}
   if(!best)return null;
