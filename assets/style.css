@@ -294,3 +294,7 @@ body{padding-bottom:70px}
   .rd-dots i.on{background:var(--accent);width:16px;border-radius:3px}
 }
 @media (min-width:720px){.rd-dots{display:none}}
+/* pcb background */
+#pcb{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;
+  -webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(0,0,0,.35),#000 95%);mask-image:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(0,0,0,.35),#000 95%)}
+@media print{#pcb{display:none}}
