@@ -204,3 +204,12 @@ body{padding-bottom:70px}
   .lg{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+/* faq */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq-h{font:600 20px/1.2 var(--f-display);letter-spacing:-.02em;margin:36px 0 14px}
+.qa{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 18px}
+.qa summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:600;display:flex;justify-content:space-between;gap:12px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";color:var(--accent);font-weight:600}
+.qa[open] summary::after{content:"−"}
+.qa p{margin:0 0 16px;color:var(--mute);max-width:70ch}
