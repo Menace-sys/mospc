@@ -32,7 +32,7 @@ uz:{
  "ftr.1":"<b>MosPC</b> (mospc.uz): O'zbekistonda kompyuter yig'ish uchun bepul PC konfigurator. Protsessor, ona plata, operativ xotira, videokarta, SSD, korpus va quvvat blokini so'mdagi narxlarda tanlang.",
  "ftr.2":"Narxlar taxminiy. Sotib olishdan oldin do'kondan aniq narx va mavjudligini so'rang.",
  "ftr.3":"Korpus o'lchamlari va kuler quvvati model nomidan taxmin qilingan.",
- "ftr.by":"Ishlab chiqaruvchi","ftr.rel":"2026-yilda chiqarilgan",
+ "ftr.by":"Ishlab chiqdi","ftr.rel":"2026-yilda chiqarilgan",
  "total":"Jami","dock.btn":"Xulosa",
  "cat.cpu":"Protsessor","cat.mb":"Plata","cat.ram":"Operativ xotira","cat.gpu":"Videokarta","cat.ssd":"SSD","cat.psu":"Quvvat bloki","cat.case":"Korpus","cat.cooler":"Kuler",
  "spec.igpu":", grafikasi bor","spec.gpu":"taxminan {w} W, {l} mm","spec.case":"{f}, videokarta {n} mm gacha","spec.cooler":"taxminan {n} W gacha",
