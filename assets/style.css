@@ -222,13 +222,18 @@ body{padding-bottom:70px}
 .lng-m button:hover{background:color-mix(in srgb,var(--ink) 7%,transparent)}
 .lng-m button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 /* maker */
-.maker{margin-top:20px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
-.maker-by{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
-.menace{display:inline-block;font:300 26px/1 "Poppins","Montserrat",system-ui,sans-serif;letter-spacing:.3em;background:#000;border-radius:10px;padding:16px 18px 16px 26px;white-space:nowrap}
+:root{--m1:#7C7396;--m2:#9A6F98;--m3:#B4628F;--m4:#C65584;--m5:#D24A76;--m6:#D93F69}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--m1:#E9E4F1;--m2:#E2C7DE;--m3:#E0A6C3;--m4:#E287A8;--m5:#E36D8D;--m6:#E4577A}}
+:root[data-theme="dark"]{--m1:#E9E4F1;--m2:#E2C7DE;--m3:#E0A6C3;--m4:#E287A8;--m5:#E36D8D;--m6:#E4577A}
+.maker{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap}
+.maker-rel{font-size:12px;color:var(--mute);letter-spacing:.01em}
+.maker-dev{display:inline-flex;align-items:baseline;gap:10px;margin-left:auto}
+.maker-by{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.menace{display:inline-block;font:300 14px/1 "Poppins","Montserrat",system-ui,sans-serif;letter-spacing:.34em;margin-right:-.34em;white-space:nowrap}
 .menace>span{display:inline-block}
-.menace .lam{margin-right:.3em}
-.menace .lam svg{display:inline-block;vertical-align:baseline;width:.72em;height:.698em;fill:none;stroke:currentColor;stroke-width:5.6;stroke-linejoin:miter;stroke-miterlimit:10;overflow:visible}
-.maker-rel{font-size:13px;color:var(--mute)}
+.menace .m1{color:var(--m1)}.menace .m2{color:var(--m2)}.menace .m3{color:var(--m3)}.menace .m4{color:var(--m4)}.menace .m5{color:var(--m5)}.menace .m6{color:var(--m6)}
+.menace .lam{margin-right:.34em}
+.menace .lam svg{display:inline-block;vertical-align:baseline;width:.72em;height:.698em;fill:none;stroke:currentColor;stroke-width:6;stroke-linejoin:miter;stroke-miterlimit:10;overflow:visible}
 @media (max-width:420px){
   .hdr .shell{gap:8px}
   .tools{gap:6px}
