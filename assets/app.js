@@ -28,7 +28,7 @@ ORDER.forEach(c=>S.pick[c]=null);
 const store={
   get(k,d){try{const v=localStorage.getItem("mospc_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
   set(k,v){try{localStorage.setItem("mospc_"+k,JSON.stringify(v))}catch(e){}}};
-S.cur=store.get("cur","uzs");S.mk=store.get("mk",10);S.rate=store.get("rate",12500);S.saved=store.get("saved",[]);
+S.cur=store.get("cur","uzs");S.mk=store.get("mk",10);S.rate=store.get("rate",12500);S.rub=store.get("rub",84);S.saved=store.get("saved",[]);
 S.budget=store.get("budget",1000);S.purpose=store.get("purpose","game");
 const theme=store.get("theme",null);if(theme)document.documentElement.dataset.theme=theme;
 applyMarkup(S.mk);
@@ -37,7 +37,8 @@ applyMarkup(S.mk);
 const nf=n=>Math.round(n).toLocaleString("en-US").replace(/,/g," ");
 const uzs=usd=>nf(Math.round(usd*S.rate/1000)*1000)+" "+t("som");
 const usdf=usd=>"$"+nf(usd);
-const m1=usd=>S.cur==="uzs"?uzs(usd):usdf(usd);
+const rubf=usd=>nf(Math.round(usd*S.rub/100)*100)+" ₽";
+const m1=usd=>S.cur==="uzs"?uzs(usd):S.cur==="rub"?rubf(usd):usdf(usd);
 const m2=usd=>S.cur==="uzs"?usdf(usd):uzs(usd);
 
 /* ---------- build logic ---------- */
@@ -161,7 +162,7 @@ function render(){
   $("#parts").innerHTML=partsHTML();
   $("#summary").innerHTML=summaryHTML(r);
   $("#dock-t").textContent=m1(r.total);
-  document.querySelectorAll("#cur-uzs,#cur-usd").forEach(b=>b.setAttribute("aria-pressed",String((b.id==="cur-uzs")===(S.cur==="uzs"))));
+  document.querySelectorAll("#cur-uzs,#cur-usd,#cur-rub").forEach(b=>b.setAttribute("aria-pressed",String(b.id==="cur-"+S.cur)));
   store.set("pick",Object.fromEntries(ORDER.map(c=>[c,S.pick[c]?S.pick[c].id:null])));
   if(typeof renderReady==="function"&&$("#rd"))renderReady();
 }
@@ -205,9 +206,9 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePicker();$("#p
 function track(n,p){try{if(window.gtag)gtag("event",n,p||{})}catch(e){}}
 function listText(r){
   const L=[t("list.h"),""];
-  ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${usdf(p.price)} (${uzs(p.price)})`)});
+  ORDER.forEach(c=>{const p=S.pick[c];if(p)L.push(`${CATS[c].n}: ${p.name}, ${S.cur==="rub"?rubf(p.price):usdf(p.price)} (${uzs(p.price)})`)});
   if(!S.pick.gpu&&S.pick.cpu&&S.pick.cpu.igpu)L.push(t("list.igpu"));
-  L.push("",t("list.total")+usdf(r.total)+" ("+uzs(r.total)+")",r.ok?t("list.ok"):t("list.bad"));
+  L.push("",t("list.total")+(S.cur==="rub"?rubf(r.total):usdf(r.total))+" ("+uzs(r.total)+")",r.ok?t("list.ok"):t("list.bad"));
   r.issues.filter(i=>i.l==="error").forEach(i=>L.push("! "+i.t));
   return L.join("\n");
 }
@@ -248,13 +249,15 @@ $("#bud").addEventListener("change",e=>track("budget_set",{value:+e.target.value
 document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.purpose=b.dataset.p;autoRun();render();track("purpose_select",{purpose:b.dataset.p})});
 $("#cur-uzs").onclick=()=>{S.cur="uzs";store.set("cur","uzs");render()};
 $("#cur-usd").onclick=()=>{S.cur="usd";store.set("cur","usd");render();track("currency_usd")};
+$("#cur-rub").onclick=()=>{S.cur="rub";store.set("cur","rub");render();track("currency_rub")};
 $("#theme").onclick=()=>{
   const root=document.documentElement;
   const dark=root.dataset.theme?root.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme=dark?"light":"dark";store.set("theme",root.dataset.theme);
 };
 $("#gear").onclick=()=>{const p=$("#pop");p.hidden=!p.hidden;$("#gear").setAttribute("aria-expanded",String(!p.hidden))};
-$("#mk").value=S.mk;$("#rate").value=S.rate;
+$("#mk").value=S.mk;$("#rate").value=S.rate;$("#rub").value=S.rub;
+$("#rub").oninput=e=>{S.rub=Math.max(1,+e.target.value||84);store.set("rub",S.rub);render()};
 $("#mk").oninput=e=>{S.mk=Math.max(0,Math.min(100,+e.target.value||0));store.set("mk",S.mk);applyMarkup(S.mk);autoRun();render()};
 $("#rate").oninput=e=>{S.rate=Math.max(1000,+e.target.value||12500);store.set("rate",S.rate);render()};
 

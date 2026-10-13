@@ -307,3 +307,12 @@ body{padding-bottom:70px}
   .maker-ai{font-size:.92em;opacity:.85}
   .maker-ai::before{content:none}
 }
+@media (max-width:359px){
+  .hdr .shell{gap:6px}
+  .tools{gap:4px}
+  .seg button{padding:5px 6px}
+  .lng-b{padding:0 7px}
+  .ib{width:32px;height:32px}
+  .logo{font-size:15px;gap:6px}
+  .logo svg{width:24px;height:24px}
+}
