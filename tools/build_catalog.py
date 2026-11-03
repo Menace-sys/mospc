@@ -49,7 +49,7 @@ for r in ws.iter_rows(min_row=2,max_row=59,values_only=True):
 ram={}
 for r in ws.iter_rows(min_row=61,max_row=98,values_only=True):
     n,p=r[0],num(r[2])
-    if not n or p is None or 'SODIMM' in n.upper(): continue
+    if not n or p is None or 'SODIM' in n.upper(): continue
     n=clean(n); t=re.search(r'DDR([45])',n); g=re.search(r'DDR[45]\s+(\d+)GB',n)
     if not t or not g: continue
     typ='DDR'+t.group(1); gb=int(g.group(1)); k=(typ,gb)
